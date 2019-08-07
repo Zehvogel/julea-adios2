@@ -11,8 +11,6 @@
 #include "JuleaInteractionReader.h"
 #include "JuleaMetadata.h"
 
-#include <julea-config.h>
-
 #include <assert.h>
 #include <bson.h>
 #include <glib.h>

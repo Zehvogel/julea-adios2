@@ -118,9 +118,7 @@ if(ADIOS2_HAVE_ZeroMQ)
     target_link_libraries(adios2 PRIVATE ZeroMQ::ZMQ)
 endif()
 
-
-#options for all machines I need to compile this on
-if(ADIOS2_HAVE_JULEA_GONDOLIN)
+if(ADIOS2_HAVE_JULEA)
   target_sources(adios2 PRIVATE
       engine/julea-kv/JuleaKVReader.cpp
       engine/julea-kv/JuleaKVReader.tcc
@@ -133,13 +131,6 @@ if(ADIOS2_HAVE_JULEA_GONDOLIN)
       engine/julea-kv/JuleaFormatReader.cpp
       engine/julea-kv/JuleaFormatWriter-legacy.cpp
 
-      # engine/julea-original/JuleaReader.cpp
-      # engine/julea-original/JuleaReader.tcc
-      # engine/julea-original/JuleaWriter.cpp
-      # engine/julea-original/JuleaWriter.tcc
-      # engine/julea-original/JuleaClientLogic.cpp
-      # engine/julea-original/JuleaFormatWriter.cpp
-
       engine/julea-test/JuleaTestReader.cpp
       engine/julea-test/JuleaTestReader.tcc
       engine/julea-test/JuleaTestWriter.cpp
@@ -151,124 +142,12 @@ if(ADIOS2_HAVE_JULEA_GONDOLIN)
       toolkit/interop/julea/JuleaDeserializer.tcc
   )
   target_include_directories(adios2 PRIVATE
-    /home/elentari/Documents/julea/include
-    /home/elentari/Documents/julea/build/include
-    /home/elentari/Documents/dependencies/
-    /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.4.0/glib-2.56.3-3gh3dnjmtz3kp5weg4pqht6ihswwyrxv/lib
-    /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.4.0/glib-2.56.3-3gh3dnjmtz3kp5weg4pqht6ihswwyrxv/include/glib-2.0
-    /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.4.0/glib-2.56.3-3gh3dnjmtz3kp5weg4pqht6ihswwyrxv/lib/glib-2.0/include
-
-    /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.4.0/libbson-1.9.1-a477qnt3mrkzovo4xdhky7fqvuswywpu/lib
-    /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.4.0/libbson-1.9.1-a477qnt3mrkzovo4xdhky7fqvuswywpu/include/libbson-1.0
-    )
+	  ${JULEA_INCLUDE_DIRS}
+	)
   target_link_libraries(adios2 PRIVATE
-     # /home/elentari/Documents/julea/build/lib/
-      /home/elentari/Documents/julea/build/lib/libjulea.so
-      /home/elentari/Documents/julea/build/lib/libjulea-adios.so
-      /home/elentari/Documents/julea/build/lib/libjulea-item.so
-      /home/elentari/Documents/julea/build/lib/libjulea-object.so
-      /home/elentari/Documents/julea/build/lib/libjulea-kv.so
-    # /home/elentari/Documents/julea/build/lib/libjulea-smd.so
-    # /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/glib-2.56.3-vkknhrxkirz2rercghai22rreonhkwv3
-    # /home/elentari/Documents/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/libbson-1.9.1-tzqabqz35xo6rwbkxmzc6nwma4h2onb3/lib/
-    #-lpthread -lm
-    #${CMAKE_THREAD_LIBS_INIT}
+	  PkgConfig::JULEA
     )
 endif()
-
-# if(ADIOS2_HAVE_JULEA)
-#   target_sources(adios2 PRIVATE
-#       engine/julea/JuleaReader.cpp
-#       engine/julea/JuleaReader.h
-#       engine/julea/JuleaReader.tcc
-#       engine/julea/JuleaWriter.cpp
-#       engine/julea/JuleaWriter.h
-#       engine/julea/JuleaWriter.tcc
-#   )
-#   target_link_libraries(adios2 PRIVATE /home/elentari/Documents/Promotion/Code/julea/build/lib/libjulea.so)
-# endif()
-
-
-# if(ADIOS2_HAVE_JULEA_CLUSTER)
-#   target_sources(adios2 PRIVATE
-#       engine/julea/JuleaReader.cpp
-#       engine/julea/JuleaReader.h
-#       engine/julea/JuleaReader.tcc
-#       engine/julea/JuleaWriter.cpp
-#       engine/julea/JuleaWriter.h
-#       engine/julea/JuleaWriter.tcc
-#   )
-#   #target_link_libraries(adios2 PRIVATE /home/duwe/Promotion/Code/julea/build/lib/libjulea.so)
-#   target_link_libraries(adios2 PRIVATE ../../julea/build/lib/libjulea.so)
-# endif()
-
-if(ADIOS2_HAVE_JULEA_MINASTIRITH)
-  target_sources(adios2 PRIVATE
-      engine/julea-kv/JuleaKVReader.cpp
-      engine/julea-kv/JuleaKVReader.tcc
-      engine/julea-kv/JuleaKVWriter.cpp
-      engine/julea-kv/JuleaKVWriter.tcc
-      engine/julea-kv/JuleaClientLogic-legacy.cpp
-      engine/julea-kv/JuleaInteractionWriter.cpp
-      engine/julea-kv/JuleaInteractionReader.cpp
-      engine/julea-kv/JuleaFormatWriter.cpp
-      engine/julea-kv/JuleaFormatReader.cpp
-      engine/julea-kv/JuleaFormatWriter-legacy.cpp
-
-      # engine/julea-original/JuleaReader.cpp
-      # engine/julea-original/JuleaReader.tcc
-      # engine/julea-original/JuleaWriter.cpp
-      # engine/julea-original/JuleaWriter.tcc
-      # engine/julea-original/JuleaClientLogic.cpp
-      # engine/julea-original/JuleaFormatWriter.cpp
-
-      engine/julea-test/JuleaTestReader.cpp
-      engine/julea-test/JuleaTestReader.tcc
-      engine/julea-test/JuleaTestWriter.cpp
-      engine/julea-test/JuleaTestWriter.tcc
-
-      toolkit/interop/julea/JuleaSerializer.cpp
-      toolkit/interop/julea/JuleaSerializer.tcc
-      toolkit/interop/julea/JuleaDeserializer.cpp
-      toolkit/interop/julea/JuleaDeserializer.tcc
-  )
-  target_include_directories(adios2 PRIVATE
-  /home/kira/Dokumente/julea/include
-  /home/kira/Dokumente/julea/build/include
-  # /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/glib-2.56.3-srdpm3t4lltp4qipbcikyfjfepc365p5/lib
-  # /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/glib-2.56.3-srdpm3t4lltp4qipbcikyfjfepc365p5/include/glib-2.0
-  # /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/glib-2.56.3-srdpm3t4lltp4qipbcikyfjfepc365p5/lib/glib-2.0/include
-  # /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/libbson-1.9.1-tzqabqz35xo6rwbkxmzc6nwma4h2onb3/lib
-  # /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-7.3.0/libbson-1.9.1-tzqabqz35xo6rwbkxmzc6nwma4h2onb3/include/libbson-1.0
-
-  /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-8.3.0/glib-2.56.3-uvahvjcdaze4h2ju6uma3y53xslhvb2q/lib
-  /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-8.3.0/glib-2.56.3-uvahvjcdaze4h2ju6uma3y53xslhvb2q/include/glib-2.0
-  /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-8.3.0/glib-2.56.3-uvahvjcdaze4h2ju6uma3y53xslhvb2q/lib/glib-2.0/include
-  /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-8.3.0/libbson-1.9.1-u3z27mm3bm2otccigjqspyxkjgopwhqo/lib
-  /home/kira/Dokumente/julea/dependencies/opt/spack/linux-ubuntu18.04-x86_64/gcc-8.3.0/libbson-1.9.1-u3z27mm3bm2otccigjqspyxkjgopwhqo/include/libbson-1.0
-  )
-  target_link_libraries(adios2 PRIVATE
-  /home/kira/Dokumente/julea/build/lib/                     # does not suffice... to include here
-  /home/kira/Dokumente/julea/build/lib/libjulea.so
-  /home/kira/Dokumente/julea/build/lib/libjulea-adios.so
-  /home/kira/Dokumente/julea/build/lib/libjulea-item.so
-  /home/kira/Dokumente/julea/build/lib/libjulea-object.so
-  /home/kira/Dokumente/julea/build/lib/libjulea-kv.so
-  )
-endif()
-
-
-# if(ADIOS2_HAVE_JULEA_VINYAMAR)
-#   target_sources(adios2 PRIVATE
-#       engine/julea/JuleaReader.cpp
-#       engine/julea/JuleaReader.h
-#       engine/julea/JuleaReader.tcc
-#       engine/julea/JuleaWriter.cpp
-#       engine/julea/JuleaWriter.h
-#       engine/julea/JuleaWriter.tcc
-#   )
-#   target_link_libraries(adios2 PRIVATE /home/elentari/Documents/Promotion/Code/julea/build/lib/libjulea.so)
-# endif()
 
 if(ADIOS2_HAVE_DataMan)
     target_sources(adios2 PRIVATE
