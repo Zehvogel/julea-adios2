@@ -127,6 +127,7 @@ if(ADIOS2_HAVE_JULEA)
       engine/julea-kv/JuleaClientLogic-legacy.cpp
       engine/julea-kv/JuleaInteractionWriter.cpp
       engine/julea-kv/JuleaInteractionReader.cpp
+      #engine/julea-kv/JuleaInteractionReaderTEST.cpp
       engine/julea-kv/JuleaFormatWriter.cpp
       engine/julea-kv/JuleaFormatReader.cpp
       engine/julea-kv/JuleaFormatWriter-legacy.cpp

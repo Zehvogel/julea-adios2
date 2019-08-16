@@ -44,7 +44,10 @@ void JuleaKVWriter::PutSyncCommon(Variable<T> &variable,
 
     PutVariableMetadataToJulea(variable, bsonMetadata,
                                m_Name);
+    // PutVariableMetadataToJuleaSmall(variable, bsonMetadata,
+    //                            m_Name);
     PutVariableDataToJulea(variable, blockInfo.Data, m_Name);
+    // PutVariableDataToJuleaSmall(variable, blockInfo.Data, m_Name);
 
     if (m_Verbosity == 5)
     {
@@ -68,12 +71,12 @@ void JuleaKVWriter::PutSyncCommon(Variable<T> &variable, const T *data)
     ParseVariableToBSON(variable, bsonMetadata);
     ParseVarTypeToBSON(variable, data, bsonMetadata);
 
-    PutVariableMetadataToJulea(variable, bsonMetadata,
+    // PutVariableMetadataToJulea(variable, bsonMetadata,
+    //                                 m_Name);
+    PutVariableMetadataToJuleaSmall(variable, bsonMetadata,
                                     m_Name);
-    // PutVariableMetadataToJuleaSmall(variable, bsonMetadata,
-                                    // m_Name);
-    PutVariableDataToJulea(variable, data, m_Name);
-    // PutVariableDataToJuleaSmall(variable, data, m_Name);
+    // PutVariableDataToJulea(variable, data, m_Name);
+    PutVariableDataToJuleaSmall(variable, data, m_Name);
 
     if (m_Verbosity == 5)
     {

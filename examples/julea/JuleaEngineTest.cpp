@@ -15,7 +15,7 @@
 
 #include <adios2.h>
 
-int write_test(){
+int TestWriteVariable(){
  /** Application variable */
     std::vector<float> myFloats = {12345.6, 1, 2, 3, 4, 5, 6, 7, 8, -42.333};
     // std::vector<float> myFloats2 = {-6666.6, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -50,9 +50,12 @@ int write_test(){
 
     /** Write variable for buffering */
     juleaWriter.Put<float>(juleaFloats, myFloats.data(),adios2::Mode::Sync);
+    // juleaWriter.Put<float>(juleaFloats, myFloats.data(),adios2::Mode::Deferred);
     // juleaWriter.Put<float>(juleaFloats2, myFloats2.data(),adios2::Mode::Sync);
     juleaWriter.Put<int>(juleaInts, myInts.data(),adios2::Mode::Sync);
+    // juleaWriter.Put<int>(juleaInts, myInts.data(),adios2::Mode::Deferred);
     juleaWriter.Put<int>(juleaInts2, myInts2.data(),adios2::Mode::Sync);
+    // juleaWriter.Put<int>(juleaInts2, myInts2.data(),adios2::Mode::Deferred);
 
     /** Create bp file, engine becomes unreachable after this*/
     juleaWriter.Close();
@@ -61,7 +64,7 @@ int write_test(){
 }
 
 
-int read_test(){
+int TestReadVariable(){
     /** Application variable */
     std::vector<float> myFloats = {-42, -42, -42, -42, -42, -42, -42, -42, -42, -42};
     // std::vector<float> myFloats2 = {-42, -42, -42, -42, -42, -42, -42, -42, -42, -42};
@@ -102,9 +105,11 @@ int read_test(){
         juleaReader.Get<float>(juleaFloats, myFloats.data(),adios2::Mode::Sync);
         // juleaReader.Get<float>(juleaFloats2, myFloats2.data(),adios2::Mode::Sync);
         juleaReader.Get<int>(juleaInts, myInts.data(),adios2::Mode::Sync);
+        // std::cout << "Data : " << juleaFloats.GetData() << std::endl;
         // juleaReader.Get<int>(juleaInts2, myInts2.data(),adios2::Mode::Sync);
     }
 
+    // std::cout << "Data: " << juleaFloats.Name() << std::endl;
     std::cout << std::endl;
     for(int i = 0; i <10; i++)
     {
@@ -120,6 +125,78 @@ int read_test(){
     return 0;
 }
 
+int TestWriteAttribute()
+{
+    std::vector<float> myFloats = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const std::size_t Nx = myFloats.size();
+    /** ADIOS class factory of IO class objects, DebugON is recommended */
+        adios2::ADIOS adios(adios2::DebugON);
+
+        /*** IO class object: settings and factory of Settings: Variables,
+         * Parameters, Transports, and Execution: Engines */
+        adios2::IO juleaIO = adios.DeclareIO("juleaIO");
+        juleaIO.SetEngine("julea-kv");
+
+        /** global array: name, { shape (total dimensions) }, { start (local) },
+         * { count (local) }, all are constant dimensions */
+        adios2::Variable<float> bpFloats = juleaIO.DefineVariable<float>(
+            "bpFloats", {}, {}, {Nx}, adios2::ConstantDims);
+
+        juleaIO.DefineAttribute<std::string>("Single_String",
+                                          "File generated with ADIOS2 without any variable put operation");
+
+        std::vector<std::string> myStrings = {"one", "two", "three"};
+        juleaIO.DefineAttribute<std::string>("Array_of_Strings", myStrings.data(),
+                                          myStrings.size());
+
+        juleaIO.DefineAttribute<double>("Attr_Double", 42.42);
+        std::vector<double> myDoubles = {1, 42, -333, 4, 5, 6, 7, 8, 9, 10};
+        juleaIO.DefineAttribute<double>("Array_of_Doubles", myDoubles.data(),
+                                     myDoubles.size());
+
+        /** Engine derived class, spawned to start IO operations */
+        // adios2::Engine juleaWriter = juleaIO.Open("myVector.bp", adios2::Mode::Write);
+        adios2::Engine juleaWriter = juleaIO.Open("testFile", adios2::Mode::Write);
+
+        /** Write variable for buffering */
+        // juleaWriter.Put<float>(bpFloats, myFloats.data());
+
+        /** Create bp file, engine becomes unreachable after this*/
+        juleaWriter.Close();
+}
+
+int TestReadAttribute()
+{
+    /** ADIOS class factory of IO class objects, DebugON is recommended */
+        adios2::ADIOS adios(adios2::DebugON);
+
+        /*** IO class object: settings and factory of Settings: Variables,
+         * Parameters, Transports, and Execution: Engines */
+        adios2::IO juleaIO = adios.DeclareIO("juleaIO");
+        juleaIO.SetEngine("julea-kv");
+
+        // adios2::Engine juleaReader = juleaIO.Open("myVector.bp", adios2::Mode::Read);
+        adios2::Engine juleaReader = juleaIO.Open("testFile", adios2::Mode::Read);
+
+        adios2::Attribute<std::string> juleaAttrSingleString = juleaIO.InquireAttribute<std::string>("Single_String");
+
+        if(juleaAttrSingleString)
+        {
+            std::cout << "Name: " << juleaAttrSingleString.Name() << std::endl;
+            std::cout << "Data: " << juleaAttrSingleString.Data()[0] << std::endl;
+            std::cout << "-- Attribute string read " << std::endl;
+        }
+
+        // adios2::Attribute<double> juleaAttrDouble = juleaIO.InquireAttribute<double>("Attr_Double");
+        auto juleaAttrDouble = juleaIO.InquireAttribute<double>("Attr_Double");
+        if(juleaAttrDouble)
+        {
+            std::cout << "Name: " << juleaAttrDouble.Name() << std::endl;
+            std::cout << "Data: " << juleaAttrDouble.Data()[0] << std::endl;
+            std::cout << "-- Attribute double read " << std::endl;
+        }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -131,10 +208,14 @@ int main(int argc, char *argv[])
     try
     {
 		std::cout << "JuleaEngineTest :)" << std::endl;
-		err = write_test();
-        std::cout << "\n JuleaEngineTest :) Write finished" << std::endl;
-        err = read_test();
-        std::cout << "\n JuleaEngineTest :) Read finished" << std::endl;
+		// err = TestWriteVariable();
+        // std::cout << "\n JuleaEngineTest :) Write variable finished \n" << std::endl;
+        // err = TestReadVariable();
+        // std::cout << "\n JuleaEngineTest :) Read variable finished \n" << std::endl;
+        err = TestWriteAttribute();
+        std::cout << "\n JuleaEngineTest :) Write attribute finished \n" << std::endl;
+        err = TestReadAttribute();
+        std::cout << "\n JuleaEngineTest :) Read attribute finished \n" << std::endl;
 
     }
 	catch (std::invalid_argument &e)
